@@ -18,26 +18,47 @@ import connectToDatabase from './database/mongodb.js';
 
 const app = express();
 
+// CORS middleware - must be before routes
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 app.use(express.json()); // allow app to handle json data sent in requests or api call
 app.use(express.urlencoded({ extended: false })); // allow app to handle url encoded data sent in requests or api call
 app.use(cookieParser()); // allow app to handle cookies sent in requests or api call
 
-// Serve static files from public directory
-app.use(express.static(join(__dirname, 'public')));
-
 // Apply Arcjet protection middleware BEFORE routes
 app.use(arcjetMiddleware);
 
+// API routes MUST come before static files to avoid conflicts
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
 app.use('/api/v1/workflows', workflowRouter);
 
+// Serve static files from public directory (after API routes)
+app.use(express.static(join(__dirname, 'public')));
+
 app.use(errorMiddleware);
 
-// Serve frontend for root route
+// Serve homepage.html for root route and aliases
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, 'public', 'index.html'));
+    res.sendFile(join(__dirname, 'public', 'homepage.html'));
+});
+
+// Alias routes for homepage
+app.get('/homepage', (req, res) => {
+    res.sendFile(join(__dirname, 'public', 'homepage.html'));
+});
+
+app.get('/index.html', (req, res) => {
+    res.sendFile(join(__dirname, 'public', 'homepage.html'));
 });
 
 // Connect to database first, then start the server

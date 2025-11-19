@@ -1,5 +1,8 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:5501/api/v1';
+// Automatically detect if running in production or development
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5501/api/v1'
+    : `${window.location.protocol}//${window.location.host}/api/v1`;
 
 // State Management
 let currentUser = null;
