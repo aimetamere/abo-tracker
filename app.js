@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-import { PORT } from './config/env.js';
+import { PORT_NUMBER } from './config/env.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,8 +49,10 @@ const startServer = async () => {
         });
         
         // Start server immediately
-        app.listen(PORT, () => {
-            console.log(`Server running on http://localhost:${PORT}`); // string interpolation and update depending on the environment
+        // Listen on 0.0.0.0 to accept connections from all network interfaces (required for VPS deployment)
+        app.listen(PORT_NUMBER, '0.0.0.0', () => {
+            console.log(`Server running on http://0.0.0.0:${PORT_NUMBER}`);
+            console.log(`Server accessible at http://72.62.38.240:${PORT_NUMBER}`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);
