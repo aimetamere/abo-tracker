@@ -32,6 +32,20 @@ const errorMiddleware = (err, req, res, next) => {
             error.statusCode = 400;
         }
 
+        //mongoose connection timeout
+        if (err.message && err.message.includes('buffering timed out')) {
+            const message = 'Database connection timeout. Please check your MongoDB connection.';
+            error = new ErrorResponse(message);
+            error.statusCode = 503;
+        }
+
+        //mongoose connection errors
+        if (err.name === 'MongoServerSelectionError' || err.name === 'MongoNetworkError') {
+            const message = 'Database connection error. Please check your MongoDB server.';
+            error = new ErrorResponse(message);
+            error.statusCode = 503;
+        }
+
         res.status(error.statusCode || 500).json({
             success: false,
             error: error.message || 'Server Error',

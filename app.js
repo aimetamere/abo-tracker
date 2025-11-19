@@ -14,7 +14,7 @@ import subscriptionRouter from './routes/subscription.routes.js';
 import workflowRouter from './routes/workflow.routes.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import arcjetMiddleware from './middlewares/arcjet.middleware.js';
-import connectToDatabase from './database/mongodb.js';
+import connectToDatabase, { mongoose } from './database/mongodb.js';
 
 const app = express();
 
@@ -64,19 +64,23 @@ app.get('/index.html', (req, res) => {
 // Connect to database first, then start the server
 const startServer = async () => {
     try {
-        // Connect to database (non-blocking - server will start even if DB fails)
-        connectToDatabase().catch(err => {
-            // Error already logged in connectToDatabase
-        });
+        // Connect to database and wait for connection before starting server
+        await connectToDatabase();
         
-        // Start server immediately
+        // Verify connection is ready
+        if (mongoose.connection.readyState !== 1) {
+            throw new Error('Database connection not established');
+        }
+        
+        // Start server only after database is connected
         // Listen on 0.0.0.0 to accept connections from all network interfaces (required for VPS deployment)
         app.listen(PORT_NUMBER, '0.0.0.0', () => {
             console.log(`Server running on http://0.0.0.0:${PORT_NUMBER}`);
             console.log(`Server accessible at http://72.62.38.240:${PORT_NUMBER}`);
         });
     } catch (error) {
-        console.error('Failed to start server:', error);
+        console.error('Failed to start server:', error.message);
+        console.error('Please check your MongoDB connection string and network connectivity.');
         process.exit(1);
     }
 };
