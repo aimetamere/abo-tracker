@@ -1,7 +1,12 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 import { PORT } from './config/env.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
@@ -17,6 +22,9 @@ app.use(express.json()); // allow app to handle json data sent in requests or ap
 app.use(express.urlencoded({ extended: false })); // allow app to handle url encoded data sent in requests or api call
 app.use(cookieParser()); // allow app to handle cookies sent in requests or api call
 
+// Serve static files from public directory
+app.use(express.static(join(__dirname, 'public')));
+
 // Apply Arcjet protection middleware BEFORE routes
 app.use(arcjetMiddleware);
 
@@ -27,8 +35,9 @@ app.use('/api/v1/workflows', workflowRouter);
 
 app.use(errorMiddleware);
 
+// Serve frontend for root route
 app.get('/', (req, res) => {
-    res.send('Hell');
+    res.sendFile(join(__dirname, 'public', 'index.html'));
 });
 
 // Connect to database first, then start the server
@@ -52,5 +61,3 @@ const startServer = async () => {
 startServer();
 
 export default app;
-
-// https://www.youtube.com/watch?v=rOpEN1JDaD0&t=1s 1:57:11

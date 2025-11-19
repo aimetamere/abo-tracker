@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Explanation - Subscription Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .explanation-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .explanation-container h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .explanation-container h2 {
+            color: #555;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 0.5rem;
+        }
+        .explanation-container h3 {
+            color: #666;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .explanation-container p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #444;
+        }
+        .explanation-container ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .explanation-container li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .explanation-container code {
+            background-color: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .back-button {
+            margin-bottom: 2rem;
+        }
+        .section-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Backend Explanation</h1>
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-secondary">Back to App</a>
+            </div>
+        </nav>
+
+        <div class="explanation-container">
+            <div class="section-content">
+                <h1>Project Explanation for SE_19 Assessment</h1>
+                <p><strong>Project Title: Subscription Reminder Web Application (Backend + Workflow System)</strong></p>
+            </div>
+
+            <div class="section-content">
+                <h2>1. Project Overview (High-Level)</h2>
+                <p>For this module, I built a full-stack web application that allows users to manage their subscriptions and automatically receive email reminders before their renewal dates. The goal of this project was to learn how to set up a backend server, create and connect to a database, build API routes, secure them using authentication and middleware, and handle long-running backend workflows.</p>
+                
+                <p>The project consists of:</p>
+                <ul>
+                    <li>A Node.js + Express backend</li>
+                    <li>A MongoDB database for persistent storage</li>
+                    <li>JWT authentication for secure access</li>
+                    <li>A subscription management system</li>
+                    <li>Automated email reminders powered by Upstash QStash</li>
+                    <li>Basic routing and static frontend files served from the backend</li>
+                </ul>
+                
+                <p>This project helped me practice the client–server model, CRUD operations, authentication, middleware architecture, deployment concepts, secure backend development and TESTING!!!!</p>
+            </div>
+
+            <div class="section-content">
+                <h2>2. How the Project Meets the Module Objectives</h2>
+                
+                <h3>Determine when and how to utilize web technologies</h3>
+                <p>I used a REST API architecture with Express to clearly separate frontend and backend responsibilities. Long-running tasks (email reminders) required external workflows, so I integrated Upstash QStash.</p>
+                
+                <h3>Create simple websites with responsive layouts</h3>
+                <p>A simple frontend (served from /public) interacts with the backend API. It is minimal but functional and follows responsive HTML/CSS basics.</p>
+                
+                <h3>Differentiate between web client and web server</h3>
+                <p>The client only sends requests and displays results. The server handles:</p>
+                <ul>
+                    <li>Data validation</li>
+                    <li>Authentication</li>
+                    <li>Database operations</li>
+                    <li>Background workflows</li>
+                    <li>Email sending</li>
+                </ul>
+                
+                <h3>Create dynamic backend applications with routing</h3>
+                <p>I implemented multiple route groups:</p>
+                <ul>
+                    <li><code>/api/v1/auth</code></li>
+                    <li><code>/api/v1/users</code></li>
+                    <li><code>/api/v1/subscriptions</code></li>
+                    <li><code>/api/v1/workflows/*</code></li>
+                </ul>
+                <p>Each route handles specific logic and returns JSON.</p>
+                
+                <h3>Apply client-side and server-side rendering</h3>
+                <p>Client-side JS handles form submissions and dynamic displays. Server-side rendering is used for serving static files and responding with API JSON data.</p>
+                
+                <h3>Handle long-lived backend state and dynamic data</h3>
+                <p>A MongoDB database stores users, passwords (hashed), and subscription records. A reminder workflow updates and checks subscription state over time.</p>
+                
+                <h3>Deploy and securely run a backend</h3>
+                <p>The project includes:</p>
+                <ul>
+                    <li>Environmental configuration (.env)</li>
+                    <li>Rate limiting</li>
+                    <li>Bot protection</li>
+                    <li>Encrypted tokens</li>
+                    <li>Error handling middleware</li>
+                    <li>Nodemailer with secure credentials</li>
+                </ul>
+            </div>
+
+            <div class="section-content">
+                <h2>3. Detailed Backend Logic Explanation</h2>
+                
+                <h3>3.1 Server Setup (Express App)</h3>
+                <p>The backend runs on Express with middleware for:</p>
+                <ul>
+                    <li>JSON parsing</li>
+                    <li>URL encoding</li>
+                    <li>Cookie parsing</li>
+                    <li>Serving static frontend files</li>
+                    <li>Security via Arcjet (rate limiting + bot filtering)</li>
+                </ul>
+                <p>All API routes are organized under <code>/api/v1/*</code>. A global error handler catches all errors and formats responses. MongoDB connects asynchronously so the server starts even if the database reconnects later.</p>
+                
+                <h3>3.2 Authentication System</h3>
+                <p>Routes under <code>/api/v1/auth</code> implement sign-up, sign-in, and sign-out.</p>
+                
+                <h4>Sign Up</h4>
+                <ul>
+                    <li>Checks if the email already exists</li>
+                    <li>Hashes password using bcrypt (10 salt rounds)</li>
+                    <li>Saves user inside a database transaction</li>
+                    <li>Creates a JWT that expires in 7 days</li>
+                </ul>
+                
+                <h4>Sign In</h4>
+                <ul>
+                    <li>Finds user by email</li>
+                    <li>Compares password hash</li>
+                    <li>Returns a new JWT</li>
+                </ul>
+                
+                <h4>Sign Out</h4>
+                <p>Placeholder but ready for token invalidation logic</p>
+                
+                <h3>3.3 Authentication Middleware</h3>
+                <p>Every protected route uses a JWT-based authorize middleware:</p>
+                <ul>
+                    <li>Extracts token from <code>Authorization: Bearer ...</code></li>
+                    <li>Validates token structure</li>
+                    <li>Verifies token signature using JWT_SECRET</li>
+                    <li>Fetches the user from the database</li>
+                    <li>Attaches user data to <code>req.user</code></li>
+                </ul>
+                <p>If token is missing or invalid → 401 Unauthorized.</p>
+                
+                <h3>3.4 User Routes</h3>
+                <p><strong>GET /api/v1/users</strong></p>
+                <p>Returns all users. (Currently public for demonstration purposes)</p>
+                
+                <p><strong>GET /api/v1/users/:id</strong></p>
+                <ul>
+                    <li>Requires authentication</li>
+                    <li>Returns a single user</li>
+                    <li>Removes password field</li>
+                    <li>Handles invalid IDs and not-found users</li>
+                </ul>
+                
+                <h3>3.5 Subscription Management</h3>
+                <p>Routes under <code>/api/v1/subscriptions</code>.</p>
+                
+                <h4>Create Subscription</h4>
+                <ul>
+                    <li>Requires authentication</li>
+                    <li>Validates ownership and input</li>
+                    <li>Auto-calculates renewal date:
+                        <ul>
+                            <li>Monthly → +30 days</li>
+                            <li>Yearly → +365 days</li>
+                        </ul>
+                    </li>
+                    <li>Creates a subscription linked to req.user</li>
+                    <li>Schedules an Upstash QStash workflow</li>
+                    <li>Returns subscription + workflowRunId</li>
+                </ul>
+                
+                <h4>Get User Subscriptions</h4>
+                <ul>
+                    <li>User must be authenticated</li>
+                    <li>The token's user ID must match :id</li>
+                    <li>Returns all subscriptions belonging to the user</li>
+                </ul>
+                
+                <h4>Delete Subscription</h4>
+                <ul>
+                    <li>Requires authentication</li>
+                    <li>Verifies ownership</li>
+                    <li>Deletes subscription from MongoDB</li>
+                </ul>
+                
+                <h3>3.6 Email Reminder Workflow</h3>
+                <p>Triggered by Upstash QStash at route:</p>
+                <p><code>POST /api/v1/workflows/subscription/reminder</code></p>
+                
+                <p><strong>Workflow logic:</strong></p>
+                <ul>
+                    <li>Fetches subscription + user</li>
+                    <li>Ensures subscription is active</li>
+                    <li>Checks the renewal date</li>
+                    <li>A loop runs through reminder days: 7, 5, 2, 1</li>
+                    <li>For each day:
+                        <ul>
+                            <li>If the reminder date is in the future → QStash sleep</li>
+                            <li>If reminder day is today → send email immediately</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <p>Nodemailer (via Gmail SMTP) sends:</p>
+                <ul>
+                    <li>Personalized HTML emails</li>
+                    <li>Photography/skate/fisheye-themed designs</li>
+                </ul>
+                
+                <h3>3.7 Database Models</h3>
+                
+                <h4>User Model</h4>
+                <p>Contains:</p>
+                <ul>
+                    <li>Name</li>
+                    <li>Email (unique)</li>
+                    <li>Password (hashed)</li>
+                    <li>Timestamps</li>
+                </ul>
+                <p>Validation:</p>
+                <ul>
+                    <li>Email format</li>
+                    <li>Password min length</li>
+                    <li>Name between 2–50 chars</li>
+                </ul>
+                
+                <h4>Subscription Model</h4>
+                <p>Contains:</p>
+                <ul>
+                    <li>Name, price, currency</li>
+                    <li>Frequency (monthly/yearly)</li>
+                    <li>Category (photos)</li>
+                    <li>Payment method</li>
+                    <li>Status (active, inactive, cancelled)</li>
+                    <li>startDate / renewalDate</li>
+                    <li>User reference</li>
+                </ul>
+                <p>Automatically calculates renewal dates and adjusts status to "expired" if needed.</p>
+                
+                <h3>3.8 Security & Middleware</h3>
+                <ul>
+                    <li>Rate limiting: 10 requests per 10 seconds</li>
+                    <li>Bot detection: blocks automated traffic</li>
+                    <li>JWT authentication</li>
+                    <li>Password hashing</li>
+                    <li>Input validation (Mongoose)</li>
+                </ul>
+                
+                <p><strong>Global error handler:</strong></p>
+                <ul>
+                    <li>invalid ObjectId → 404</li>
+                    <li>duplicate key → 400</li>
+                    <li>validation errors → 400</li>
+                </ul>
+                
+                <p>This prevents information leaks and enforces consistent structure.</p>
+                
+                <h3>3.9 External Integrations</h3>
+                <p><strong>Upstash QStash</strong></p>
+                <p>Used for scheduling long-running workflows and sleep timers.</p>
+                
+                <p><strong>Nodemailer (Gmail SMTP)</strong></p>
+                <p>Used to send themed HTML email reminders.</p>
+            </div>
+
+            <div class="section-content">
+                <h2>4. Summary</h2>
+                <p>This project demonstrates the core learning outcomes of SE_19: building a backend, using databases, managing app state, handling authentication, applying security concepts, and understanding client–server interaction.</p>
+                <p>It integrates real-world backend concepts like workflows, middleware architecture, and deployment-oriented configuration.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

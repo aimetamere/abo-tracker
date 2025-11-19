@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <h1>Subscription Tracker</h1>
+            <div class="nav-buttons">
+                <a href="backend-explanation.html" class="btn btn-secondary">Backend Explanation</a>
+                <button id="signOutBtn" class="btn btn-danger" style="display: none;">Sign Out</button>
+            </div>
+        </nav>
+
+        <!-- Auth Section (shown when not logged in) -->
+        <div id="authSection" class="section">
+            <!-- Sign Up Form -->
+            <div id="signUpForm" class="form-container" style="display: none;">
+                <h2>Create Account</h2>
+                <form id="signUpFormElement">
+                    <div class="form-group">
+                        <label for="signUpName">Name</label>
+                        <input type="text" id="signUpName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signUpEmail">Email</label>
+                        <input type="email" id="signUpEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signUpPassword">Password</label>
+                        <input type="password" id="signUpPassword" name="password" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                    <p class="form-switch">Already have an account? <a href="#" id="showSignIn">Sign In</a></p>
+                </form>
+                <div id="signUpError" class="error-message"></div>
+            </div>
+
+            <!-- Sign In Form -->
+            <div id="signInForm" class="form-container">
+                <h2>Sign In</h2>
+                <form id="signInFormElement">
+                    <div class="form-group">
+                        <label for="signInEmail">Email</label>
+                        <input type="email" id="signInEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signInPassword">Password</label>
+                        <input type="password" id="signInPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                    <p class="form-switch">Don't have an account? <a href="#" id="showSignUp">Sign Up</a></p>
+                </form>
+                <div id="signInError" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section (shown when logged in) -->
+        <div id="dashboardSection" class="section" style="display: none;">
+            <h2>Welcome, <span id="userName"></span>!</h2>
+            
+            <!-- Create Subscription Form -->
+            <div class="card">
+                <h3>Subscribe to Nico's Photos</h3>
+                <form id="createSubscriptionForm">
+                    <!-- Hidden fields for fixed values -->
+                    <input type="hidden" id="subscriptionName" name="name" value="Nico's photos">
+                    <input type="hidden" id="subscriptionPrice" name="price" value="49.99">
+                    <input type="hidden" id="subscriptionCategory" name="category" value="photos">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="subscriptionCurrency">Currency</label>
+                            <select id="subscriptionCurrency" name="currency" required>
+                                <option value="EUR">EUR</option>
+                                <option value="USD">USD</option>
+                                <option value="GDP">GDP</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subscriptionFrequency">Frequency</label>
+                            <select id="subscriptionFrequency" name="frequency" required>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subscriptionPaymentMethod">Payment Method</label>
+                        <select id="subscriptionPaymentMethod" name="paymentMethod" required>
+                            <option value="">Select payment method</option>
+                            <option value="PayPal">PayPal</option>
+                            <option value="Credit Card">Credit Card</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Credit Card Fields (shown only when Credit Card is selected) -->
+                    <div id="creditCardFields" style="display: none;">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiry Date</label>
+                                <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCVV">CVV</label>
+                                <input type="text" id="cardCVV" name="cardCVV" placeholder="123" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subscriptionStartDate">Start Date</label>
+                        <input type="date" id="subscriptionStartDate" name="startDate" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+                <div id="createSubscriptionError" class="error-message"></div>
+                <div id="createSubscriptionSuccess" class="success-message"></div>
+            </div>
+
+            <!-- Subscriptions List -->
+            <div class="card">
+                <h3>to showcase subscriptions created</h3>
+                <div id="subscriptionsList">
+                    <p class="loading">Loading subscriptions...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
