@@ -3,39 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Tracker</title>
+    <title>Subscription Tracker - Never Miss a Renewal</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <!-- Navigation -->
         <nav class="navbar">
-            <h1>Subscription Tracker</h1>
+            <div class="navbar-brand">
+                <span class="brand-icon">📊</span>
+                <h1>Subscription Tracker</h1>
+            </div>
             <div class="nav-buttons">
                 <a href="backend-explanation.html" class="btn btn-secondary">Backend Explanation</a>
                 <button id="signOutBtn" class="btn btn-danger" style="display: none;">Sign Out</button>
             </div>
         </nav>
 
+        <!-- Hero Section (shown when not logged in) -->
+        <div id="heroSection" class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Take Control of Your Subscriptions</h1>
+                <p class="hero-subtitle">Never miss a renewal date again. Track all your subscriptions in one place and get automated reminders before they renew.</p>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔔</span>
+                        <span>Email Reminders</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📱</span>
+                        <span>Easy Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💰</span>
+                        <span>Save Money</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Auth Section (shown when not logged in) -->
-        <div id="authSection" class="section">
+        <div id="authSection" class="section auth-section">
             <!-- Sign Up Form -->
             <div id="signUpForm" class="form-container" style="display: none;">
-                <h2>Create Account</h2>
+                <div class="form-header">
+                    <h2>Create Your Account</h2>
+                    <p>Start tracking your subscriptions today</p>
+                </div>
                 <form id="signUpFormElement">
                     <div class="form-group">
-                        <label for="signUpName">Name</label>
-                        <input type="text" id="signUpName" name="name" required>
+                        <label for="signUpName">Full Name</label>
+                        <input type="text" id="signUpName" name="name" placeholder="John Doe" required>
                     </div>
                     <div class="form-group">
-                        <label for="signUpEmail">Email</label>
-                        <input type="email" id="signUpEmail" name="email" required>
+                        <label for="signUpEmail">Email Address</label>
+                        <input type="email" id="signUpEmail" name="email" placeholder="john@example.com" required>
                     </div>
                     <div class="form-group">
                         <label for="signUpPassword">Password</label>
-                        <input type="password" id="signUpPassword" name="password" required minlength="6">
+                        <input type="password" id="signUpPassword" name="password" placeholder="Minimum 6 characters" required minlength="6">
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
                     <p class="form-switch">Already have an account? <a href="#" id="showSignIn">Sign In</a></p>
                 </form>
                 <div id="signUpError" class="error-message"></div>
@@ -43,15 +74,18 @@
 
             <!-- Sign In Form -->
             <div id="signInForm" class="form-container">
-                <h2>Sign In</h2>
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to manage your subscriptions</p>
+                </div>
                 <form id="signInFormElement">
                     <div class="form-group">
-                        <label for="signInEmail">Email</label>
-                        <input type="email" id="signInEmail" name="email" required>
+                        <label for="signInEmail">Email Address</label>
+                        <input type="email" id="signInEmail" name="email" placeholder="john@example.com" required>
                     </div>
                     <div class="form-group">
                         <label for="signInPassword">Password</label>
-                        <input type="password" id="signInPassword" name="password" required>
+                        <input type="password" id="signInPassword" name="password" placeholder="Enter your password" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Sign In</button>
                     <p class="form-switch">Don't have an account? <a href="#" id="showSignUp">Sign Up</a></p>
@@ -62,11 +96,20 @@
 
         <!-- Dashboard Section (shown when logged in) -->
         <div id="dashboardSection" class="section" style="display: none;">
-            <h2>Welcome, <span id="userName"></span>!</h2>
+            <div class="dashboard-header">
+                <div>
+                    <h2>Welcome back, <span id="userName" class="user-name"></span>! 👋</h2>
+                    <p class="dashboard-subtitle">Manage your subscriptions and never miss a renewal</p>
+                </div>
+            </div>
             
             <!-- Create Subscription Form -->
-            <div class="card">
-                <h3>Subscribe to Nico's Photos</h3>
+            <div class="card subscription-form-card">
+                <div class="card-header">
+                    <span class="card-icon">📸</span>
+                    <h3>Subscribe to Nico's Photos</h3>
+                </div>
+                <p class="card-description">Get access to premium photo collections for just €49.99</p>
                 <form id="createSubscriptionForm">
                     <!-- Hidden fields for fixed values -->
                     <input type="hidden" id="subscriptionName" name="name" value="Nico's photos">
@@ -77,13 +120,13 @@
                         <div class="form-group">
                             <label for="subscriptionCurrency">Currency</label>
                             <select id="subscriptionCurrency" name="currency" required>
-                                <option value="EUR">EUR</option>
-                                <option value="USD">USD</option>
-                                <option value="GDP">GDP</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="GDP">GBP (£)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="subscriptionFrequency">Frequency</label>
+                            <label for="subscriptionFrequency">Billing Frequency</label>
                             <select id="subscriptionFrequency" name="frequency" required>
                                 <option value="monthly">Monthly</option>
                                 <option value="yearly">Yearly</option>
@@ -101,7 +144,7 @@
                     </div>
                     
                     <!-- Credit Card Fields (shown only when Credit Card is selected) -->
-                    <div id="creditCardFields" style="display: none;">
+                    <div id="creditCardFields" style="display: none;" class="credit-card-section">
                         <div class="form-group">
                             <label for="cardNumber">Card Number</label>
                             <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
@@ -123,15 +166,21 @@
                         <input type="date" id="subscriptionStartDate" name="startDate" required>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <span>Subscribe Now</span>
+                        <span class="btn-icon">→</span>
+                    </button>
                 </form>
                 <div id="createSubscriptionError" class="error-message"></div>
                 <div id="createSubscriptionSuccess" class="success-message"></div>
             </div>
 
             <!-- Subscriptions List -->
-            <div class="card">
-                <h3>to showcase subscriptions created</h3>
+            <div class="card subscriptions-list-card">
+                <div class="card-header">
+                    <span class="card-icon">📋</span>
+                    <h3>Your Subscriptions</h3>
+                </div>
                 <div id="subscriptionsList">
                     <p class="loading">Loading subscriptions...</p>
                 </div>

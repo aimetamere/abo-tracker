@@ -75,6 +75,8 @@ function setupEventListeners() {
 
 // Show auth section
 function showAuth() {
+    const heroSection = document.getElementById('heroSection');
+    if (heroSection) heroSection.style.display = 'block';
     document.getElementById('authSection').style.display = 'block';
     document.getElementById('dashboardSection').style.display = 'none';
     document.getElementById('signOutBtn').style.display = 'none';
@@ -82,6 +84,8 @@ function showAuth() {
 
 // Show dashboard
 function showDashboard() {
+    const heroSection = document.getElementById('heroSection');
+    if (heroSection) heroSection.style.display = 'none';
     document.getElementById('authSection').style.display = 'none';
     document.getElementById('dashboardSection').style.display = 'block';
     document.getElementById('signOutBtn').style.display = 'inline-block';
