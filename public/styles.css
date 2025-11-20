@@ -637,7 +637,7 @@ a.btn {
     .form-group input,
     .form-group select {
         padding: 16px; /* Made these bigger so your fingers can actually tap them easily */
-        font-size: 16px; /* This is super important! iOS Safari zooms in if font is smaller than 16px, which is annoying */
+        font-size: 16px; /* riOS Safari zooms in if font is smaller than 16px, which is annoying */
     }
 
     .form-row {
