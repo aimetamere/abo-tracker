@@ -4,12 +4,12 @@
 
 1. **Frontend API URL** - Now auto-detects server (was hardcoded to localhost)
 2. **CORS Support** - Added CORS headers for API requests
-3. **Route Order** - API routes now come before static files
+3. **Route Order** - API routes now come beforehand the static files
 
 ## On Your VPS - Deploy the Fix:
 
 ```bash
-# Navigate to your project
+# Navigate to project
 cd /var/www/abo-tracker
 
 # Pull the latest code from GitHub
@@ -66,7 +66,7 @@ curl -X POST http://localhost:5501/api/v1/auth/sign-up \
 # Check if .env.production.local exists
 ls -la .env.production.local
 
-# View first few lines (don't show passwords!)
+# View first few lines (keep it to yourself ^^)
 head -5 .env.production.local
 ```
 
@@ -81,14 +81,14 @@ sudo tail -f /var/log/nginx/error.log
 
 ## Expected Behavior After Fix:
 
-1. Visiting `http://72.62.38.240:5501` should show your app
+1. Visiting `http://YOUR-VPS-IP:5501` should show your app
 2. Sign up form should work
 3. Sign in form should work
 4. API calls should go to `/api/v1/auth/sign-up` etc.
 
 ## If Still Having Issues:
 
-Share the output of:
+Read again the logs carfully and figure where the issue is coming from and debug, debug and debug..
 ```bash
 pm2 logs abo-tracker --lines 100
 ```

@@ -16,7 +16,7 @@ const connectToDatabase = async () => {
         
         // Add connection options with timeout to prevent hanging
         await mongoose.connect(DB_URI, {
-            serverSelectionTimeoutMS: 10000, // Increased to 10 seconds
+            serverSelectionTimeoutMS: 10000, // 10 seconds
             socketTimeoutMS: 45000,
             connectTimeoutMS: 10000,
         });

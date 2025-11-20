@@ -20,10 +20,7 @@ pm2 logs abo-tracker --lines 50
 ### 2. Test Health Endpoint
 
 ```bash
-# From your VPS
-curl http://localhost:5501/health
-
-# From your local machine (if accessible)
+# From your VPS machine
 curl http://72.62.38.240:5501/health
 ```
 
@@ -66,7 +63,7 @@ netstat -tuln | grep 5501
 # Should show: tcp  0  0  0.0.0.0:5501  ...
 ```
 
-If it shows `127.0.0.1:5501` instead of `0.0.0.0:5501`, that's the problem!
+If it shows `127.0.0.1:5501` instead of `0.0.0.0:5501`, that is a problem oups!
 
 ### 6. Check Firewall
 

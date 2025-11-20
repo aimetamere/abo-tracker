@@ -1,5 +1,5 @@
 // Import env.js FIRST - it loads environment variables
-import { PORT_NUMBER } from './config/env.js';
+import { PORT_NUMBER } from './src/config/env.js';
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -13,9 +13,9 @@ import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
 import subscriptionRouter from './routes/subscription.routes.js';
 import workflowRouter from './routes/workflow.routes.js';
-import errorMiddleware from './middlewares/error.middleware.js';
-import arcjetMiddleware from './middlewares/arcjet.middleware.js';
-import connectToDatabase, { mongoose } from './database/mongodb.js';
+import errorMiddleware from './src/middlewares/error.middleware.js';
+import arcjetMiddleware from './src/middlewares/arcjet.middleware.js';
+import connectToDatabase, { mongoose } from './src/database/mongodb.js';
 
 const app = express();
 

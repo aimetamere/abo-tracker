@@ -10,24 +10,40 @@ body {
     min-height: 100vh;
     padding: 20px;
     line-height: 1.6;
+    /* Prevent horizontal scroll on mobile, this was causing issues before I added it */
+    /* Nothing worse than accidentally scrolling sideways on a phone */
+    overflow-x: hidden;
+    /* These make text look smoother on phones (especially iOS) */
+    /* Without these, text can look a bit blurry on mobile screens */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    /* Prevent container from causing horizontal scroll */
+    /* box-sizing: border-box is important, it makes padding count inside the width instead of adding to it */
+    /* Without this, things can overflow and cause that annoying horizontal scroll */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Navigation */
 .navbar {
+    /* rgba with 0.95 opacity makes it slightly transparent, looks nice over the gradient background */
     background: rgba(255, 255, 255, 0.95);
+    /* backdrop-filter blur creates that "frosted glass" effect, super modern looking */
     backdrop-filter: blur(10px);
     padding: 20px 30px;
     border-radius: 15px;
     margin-bottom: 30px;
+    /* Flexbox makes it easy to space things out horizontally */
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    /* Smooth transitions for hover effects */
     transition: all 0.3s ease;
 }
 
@@ -75,7 +91,10 @@ body {
     animation: fadeInUp 0.6s ease-out;
 }
 
-@keyframes fadeInUp {
+@keyframes fadeInUp { 
+    /* This animation makes the hero section fade in and slide up when the page loads */
+    /* Makes it feel more polished instead of just appearing instantly */
+    /* translateY moves it up 30px, then back to 0, creating that smooth slide effect */
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -136,7 +155,9 @@ body {
     animation: fadeIn 0.5s ease-out;
 }
 
-@keyframes fadeIn {
+@keyframes fadeIn { 
+    /* Simple fade in animation for sections */
+    /* Just makes things appear smoothly instead of popping in */
     from { opacity: 0; }
     to { opacity: 1; }
 }
@@ -213,6 +234,9 @@ body {
 }
 
 .form-row {
+    /* Using CSS Grid to put form fields side-by-side */
+    /* 1fr 1fr means two equal columns,super useful for things like "First Name" and "Last Name" */
+    /* Grid is way easier than floats for this kind of layout */
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -236,6 +260,8 @@ body {
 }
 
 .btn:hover {
+    /* Makes buttons lift up slightly when you hover, gives nice crispy effect */
+    /* translateY(-2px) moves it up 2 pixels, creating that "lift" effect */
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -249,6 +275,8 @@ a.btn {
 }
 
 .btn-primary {
+    /* Linear gradient makes buttons look more modern than flat colors */
+    /* 135deg is the angle, makes it go diagonally from top-left to bottom-right */
     background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
     color: white;
     width: 100%;
@@ -338,7 +366,7 @@ a.btn {
     animation: slideDown 0.3s ease-out;
 }
 
-@keyframes slideDown {
+@keyframes slideDown { 
     from {
         opacity: 0;
         transform: translateY(-10px);
@@ -511,29 +539,30 @@ a.btn {
     font-size: 16px;
 }
 
-/* Responsive Design */
+/* Responsive Design for Approach */
+/* This whole section makes the site work on phones and tablets */
+/* Without this, everything would look tiny and broken on mobile (which happened to me at first!) */
+
+/* Tablets and smaller screens (like iPads in portrait mode) */
+/* 768px is a common breakpoint, most phones are smaller than this */
 @media (max-width: 768px) {
     body {
         padding: 10px;
+        font-size: 16px;
     }
 
-    .hero-title {
-        font-size: 32px;
+    .container {
+        max-width: 100%;
     }
 
-    .hero-subtitle {
-        font-size: 18px;
-    }
-
-    .hero-features {
-        flex-direction: column;
-        gap: 20px;
-    }
-
+    /* Navigation */
     .navbar {
+        /* Stack navigation vertically on mobile instead of side-by-side */
+        /* Makes it much easier to tap the buttons */
         flex-direction: column;
         gap: 15px;
-        padding: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
     }
 
     .navbar-brand {
@@ -541,38 +570,296 @@ a.btn {
         justify-content: center;
     }
 
+    .navbar h1 {
+        font-size: 20px;
+    }
+
     .nav-buttons {
         width: 100%;
         flex-direction: column;
+        gap: 10px;
     }
 
     .nav-buttons .btn {
         width: 100%;
+        padding: 12px 20px;
     }
 
+    /* Hero Section */
+    .hero-section {
+        padding: 40px 20px;
+        border-radius: 15px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        padding: 0 10px;
+    }
+
+    .hero-features {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px;
+    }
+
+    /* Sections */
     .section {
-        padding: 24px;
+        padding: 24px 20px;
+        border-radius: 12px;
+    }
+
+    .auth-section {
+        padding: 30px 20px;
+    }
+
+    /* Forms */
+    .form-container {
+        padding: 0;
+    }
+
+    .form-header h2 {
+        font-size: 28px;
+    }
+
+    .form-header p {
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 16px; /* Made these bigger so your fingers can actually tap them easily */
+        font-size: 16px; /* This is super important! iOS Safari zooms in if font is smaller than 16px, which is annoying */
     }
 
     .form-row {
+        /* Changed from 2 columns to 1 column on mobile */
+        /* Two columns side-by-side is too cramped on small screens */
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
-    .subscription-item {
-        flex-direction: column;
-        align-items: flex-start;
+    /* Buttons */
+    /* Made buttons bigger because tapping tiny buttons on phone screens is frustrating */
+    .btn {
+        padding: 16px 24px; /* Bigger padding = easier to tap */
+        font-size: 16px;
+        min-height: 48px; /* Google says 48px is the minimum for touch targets, so I followed that */
     }
 
-    .subscription-actions {
-        width: 100%;
-        margin-top: 20px;
+    .btn-large {
+        padding: 18px 28px;
+        font-size: 18px;
     }
 
-    .subscription-actions .btn {
-        flex: 1;
+    /* Cards */
+    .card {
+        padding: 24px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+
+    .card h3 {
+        font-size: 22px;
+    }
+
+    .card-description {
+        font-size: 15px;
+    }
+
+    .card-header {
+        margin-bottom: 12px;
+    }
+
+    /* Dashboard */
+    .dashboard-header {
+        margin-bottom: 30px;
     }
 
     .dashboard-header h2 {
         font-size: 28px;
+        line-height: 1.3;
+    }
+
+    .dashboard-subtitle {
+        font-size: 16px;
+    }
+
+    /* Subscription Items */
+    .subscription-item {
+        /* Stack subscription details vertically on mobile */
+        /* The delete button goes full-width below the details, which is way easier to tap */
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .subscription-item h4 {
+        font-size: 18px;
+    }
+
+    .subscription-details {
+        width: 100%;
+    }
+
+    .subscription-actions {
+        width: 100%;
+        margin-top: 15px;
+        flex-direction: column;
+    }
+
+    .subscription-actions .btn {
+        width: 100%;
+        flex: none;
+    }
+
+    /* Credit Card Section */
+    .credit-card-section {
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    /* Messages */
+    .error-message,
+    .success-message {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+}
+
+/* Small phones (320px - 480px) */
+/* This is for older/smaller phones, things get even more cramped here */
+/* Had to shrink fonts and spacing even more, otherwise text would overflow */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+        font-size: 15px;
+    }
+
+    .navbar {
+        padding: 12px 15px;
+    }
+
+    .navbar h1 {
+        font-size: 18px;
+    }
+
+    .hero-section {
+        padding: 30px 15px;
+    }
+
+    .hero-title {
+        font-size: 26px;
+        margin-bottom: 15px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+
+    .section {
+        padding: 20px 15px;
+    }
+
+    .form-header h2 {
+        font-size: 24px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 14px;
+    }
+
+    .card {
+        padding: 20px 15px;
+    }
+
+    .card h3 {
+        font-size: 20px;
+    }
+
+    .dashboard-header h2 {
+        font-size: 24px;
+    }
+
+    .subscription-item {
+        padding: 15px;
+    }
+
+    .subscription-item h4 {
+        font-size: 16px;
+    }
+
+    .subscription-item p {
+        font-size: 13px;
+    }
+
+    .btn {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+}
+
+/* Very small phones (up to 360px) */
+/* For those tiny phones that still exist,everything needs to be super compact */
+/* Honestly, if someone has a phone this small, they probably need a new one, but hey, let's support them anyway */
+@media (max-width: 360px) {
+    body {
+        padding: 5px;
+    }
+
+    .navbar {
+        padding: 10px 12px;
+    }
+
+    .hero-title {
+        font-size: 22px;
+    }
+
+    .hero-subtitle {
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 15px 12px;
+    }
+
+    .form-header h2 {
+        font-size: 22px;
+    }
+
+    .card {
+        padding: 15px 12px;
+    }
+
+    .dashboard-header h2 {
+        font-size: 22px;
+    }
+}
+
+/* Landscape orientation on mobile */
+/* When people turn their phone sideways, things look different */
+/* The hero section especially needs less vertical space, otherwise it takes up the whole screen */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        padding: 30px 20px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+    }
+
+    .section {
+        padding: 20px;
     }
 }

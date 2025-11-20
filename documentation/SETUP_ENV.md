@@ -1,17 +1,18 @@
-# Quick Setup: Create .env.production.local on Your VPS
+# Quick Setup: Create .env.production.local on VPS server
 
-## On Your VPS Server, Run These Commands:
+## On the VPS Server, Run These Commands:
 
 ```bash
 # Navigate to your project directory
 cd /var/www/abo-tracker
-# (or wherever you cloned the project)
+# (or wherever your project is cloned)
 
-# Create the production environment file
+# To create the production environment file
 nano .env.production.local
 ```
 
-## Copy and Paste This Template:
+## Copy and Paste This Template: 
+# (or if built before end locally your .env.local file)
 
 **Replace the values with your actual credentials from development:**
 
@@ -41,7 +42,7 @@ EMAIL_PASSWORD=your-gmail-app-password-from-development
 2. Press `Y` to confirm
 3. Press `Enter` to save
 
-## Restart Your Application:
+## Restart the Application:
 
 ```bash
 pm2 restart abo-tracker

@@ -25,6 +25,9 @@
         <!-- Auth Section (shown when not logged in) -->
         <div id="authSection" class="section auth-section">
             <!-- Sign Up Form -->
+            <!-- This form calls the backend API at /api/v1/auth/sign-up when submitted -->
+            <!-- The backend checks if email exists, hashes the password with bcrypt, and creates a new user in MongoDB -->
+            <!-- If successful, it returns a JWT token that gets stored in localStorage (which is how we know you're logged in) -->
             <div id="signUpForm" class="form-container" style="display: none;">
                 <div class="form-header">
                     <h2>Create Your Account</h2>
@@ -50,9 +53,12 @@
             </div>
 
             <!-- Sign In Form -->
+            <!-- This form calls /api/v1/auth/sign-in when you submit it -->
+            <!-- The backend finds your user by email, compares the password hash (using bcrypt), and gives you a fresh JWT token -->
+            <!-- The token gets saved so you stay logged in even if you refresh the page -->
             <div id="signInForm" class="form-container">
                 <div class="form-header">
-                    <h2>Welcome Back</h2>
+                    <h2>Welcome</h2>
                     <p>Sign in to manage your subscriptions</p>
                 </div>
                 <form id="signInFormElement">
@@ -75,17 +81,21 @@
         <div id="dashboardSection" class="section" style="display: none;">
             <div class="dashboard-header">
                 <div>
-                    <h2>Welcome back, <span id="userName" class="user-name"></span>!</h2>
+                    <h2>Welcome back, <span id="userName" class="user-name"></span> !</h2>
                     <p class="dashboard-subtitle">Manage your subscriptions and never miss a renewal</p>
                 </div>
             </div>
             
             <!-- Create Subscription Form -->
+            <!-- When you submit this, it calls POST /api/v1/subscriptions -->
+            <!-- The backend requires authentication (JWT token in the Authorization header), validates everything, calculates the renewal date automatically -->
+            <!-- Then it schedules an Upstash QStash workflow that will send you email reminders before your subscription renews -->
+            <!-- Pretty cool how it all connects together! -->
             <div class="card subscription-form-card">
                 <div class="card-header">
                     <h3>Subscribe to Nico's Photos</h3>
                 </div>
-                <p class="card-description">Get access to premium photo collections for just €49.99</p>
+                <p class="card-description">For €49.99 you get weekly photos for a month</p>
                 <form id="createSubscriptionForm">
                     <!-- Hidden fields for fixed values -->
                     <input type="hidden" id="subscriptionName" name="name" value="Nico's photos">
@@ -152,6 +162,9 @@
             </div>
 
             <!-- Subscriptions List -->
+            <!-- This section loads your subscriptions by calling GET /api/v1/subscriptions/user/:id -->
+            <!-- The backend checks your JWT token to make sure you're authenticated, then fetches all subscriptions linked to your user ID from MongoDB -->
+            <!-- If you delete a subscription, it calls DELETE /api/v1/subscriptions/:id (also requires auth and ownership verification) -->
             <div class="card subscriptions-list-card">
                 <div class="card-header">
                     <h3>Your Subscriptions</h3>
@@ -163,6 +176,9 @@
         </div>
     </div>
 
+    <!-- All the backend API calls happen in app.js -->
+    <!-- It automatically detects if you're on localhost (development) or production, and calls the right API endpoint -->
+    <!-- The API_BASE_URL gets set based on where the page is loaded from, which was super useful when deploying to VPS -->
     <script src="app.js"></script>
 </body>
 </html>

@@ -64,7 +64,7 @@
         <nav class="navbar">
             <h1>Backend Explanation</h1>
             <div class="nav-buttons">
-                <a href="index.html" class="btn btn-secondary">Back to App</a>
+                <a href="/" class="btn btn-secondary">Back to App</a>
             </div>
         </nav>
 
@@ -75,8 +75,8 @@
             </div>
 
             <div class="section-content">
-                <h2>1. Project Overview (High-Level)</h2>
-                <p>For this module, I built a full-stack web application that allows users to manage their subscriptions and automatically receive email reminders before their renewal dates. The goal of this project was to learn how to set up a backend server, create and connect to a database, build API routes, secure them using authentication and middleware, and handle long-running backend workflows.</p>
+                <h2>1. Project Overview</h2>
+                <p>For this module, I built a full-stack web application that allows users sign up and make their subscriptions and automatically receive email reminders before their renewal dates. The goal of this project was to learn and make a backend logic for a subscription reminder web application, comunicating to a database, make a API routes, secure them using authentication and middleware, and handle long-running backend workflows.</p>
                 
                 <p>The project consists of:</p>
                 <ul>
@@ -95,10 +95,10 @@
                 <h2>2. How the Project Meets the Module Objectives</h2>
                 
                 <h3>Determine when and how to utilize web technologies</h3>
-                <p>I used a REST API architecture with Express to clearly separate frontend and backend responsibilities. Long-running tasks (email reminders) required external workflows, so I integrated Upstash QStash.</p>
+                <p>I used a REST API architecture with Express to clearly separate frontend and backend responsibilities within the full-stack application. Long-running tasks (email reminders) required external workflows, so I integrated Upstash QStash.</p>
                 
                 <h3>Create simple websites with responsive layouts</h3>
-                <p>A simple frontend (served from /public) interacts with the backend API. It is minimal but functional and follows responsive HTML/CSS basics.</p>
+                <p>A simple frontend (served from /public) interacts with the backend API. It is minimal but functional and follows responsive HTML/CSS basics. (LLMs were used to integrate this descriptive text into the HTML structure.)</p>
                 
                 <h3>Differentiate between web client and web server</h3>
                 <p>The client only sends requests and displays results. The server handles:</p>
@@ -118,23 +118,23 @@
                     <li><code>/api/v1/subscriptions</code></li>
                     <li><code>/api/v1/workflows/*</code></li>
                 </ul>
-                <p>Each route handles specific logic and returns JSON.</p>
+                <p>Each route handles specific logic and returns JSON. (does not work as expected, but was there when building locally)</p>
                 
                 <h3>Apply client-side and server-side rendering</h3>
                 <p>Client-side JS handles form submissions and dynamic displays. Server-side rendering is used for serving static files and responding with API JSON data.</p>
                 
                 <h3>Handle long-lived backend state and dynamic data</h3>
-                <p>A MongoDB database stores users, passwords (hashed), and subscription records. A reminder workflow updates and checks subscription state over time.</p>
+                <p>A MongoDB database stores users, passwords (hashed, using bcrypt), and subscription records. A reminder workflow updates and checks subscription state over time.</p>
                 
                 <h3>Deploy and securely run a backend</h3>
                 <p>The project includes:</p>
                 <ul>
-                    <li>Environmental configuration (.env)</li>
-                    <li>Rate limiting</li>
-                    <li>Bot protection</li>
-                    <li>Encrypted tokens</li>
-                    <li>Error handling middleware</li>
-                    <li>Nodemailer with secure credentials</li>
+                    <li>Environmental configuration (.env, which caused me issue when deploying to VPS)</li>
+                    <li>Rate limiting (using Arcjet)</li>
+                    <li>Bot protection (using Arcjet)</li>
+                    <li>Encrypted tokens (using JWT)</li>
+                    <li>Error handling middleware (using error.middleware.js)</li>
+                    <li>Nodemailer with secure credentials (using Gmail SMTP)</li>
                 </ul>
             </div>
 
@@ -148,9 +148,9 @@
                     <li>URL encoding</li>
                     <li>Cookie parsing</li>
                     <li>Serving static frontend files</li>
-                    <li>Security via Arcjet (rate limiting + bot filtering)</li>
+                    <li>Security via Arcjet (rate limiting + bot filtering, which was super useful to explore)</li>
                 </ul>
-                <p>All API routes are organized under <code>/api/v1/*</code>. A global error handler catches all errors and formats responses. MongoDB connects asynchronously so the server starts even if the database reconnects later.</p>
+                <p>All API routes are organized under <code>/api/v1/*</code>. A global error handler catches all errors and formats responses. MongoDB connects asynchronously so the server starts even if the database reconnects later.(which also gave me trouble when deploying to VPS)</p>
                 
                 <h3>3.2 Authentication System</h3>
                 <p>Routes under <code>/api/v1/auth</code> implement sign-up, sign-in, and sign-out.</p>
@@ -185,7 +185,6 @@
                 <p>If token is missing or invalid → 401 Unauthorized.</p>
                 
                 <h3>3.4 User Routes</h3>
-                <p><strong>GET /api/v1/users</strong></p>
                 <p>Returns all users. (Currently public for demonstration purposes)</p>
                 
                 <p><strong>GET /api/v1/users/:id</strong></p>
@@ -203,7 +202,7 @@
                 <ul>
                     <li>Requires authentication</li>
                     <li>Validates ownership and input</li>
-                    <li>Auto-calculates renewal date:
+                    <li>Auto-calculates renewal date: (would need to implement too auto calculate for the price when yearly selected ^^)
                         <ul>
                             <li>Monthly → +30 days</li>
                             <li>Yearly → +365 days</li>
@@ -273,7 +272,7 @@
                 <p>Contains:</p>
                 <ul>
                     <li>Name, price, currency</li>
-                    <li>Frequency (monthly/yearly)</li>
+                    <li>Frequency (monthly/yearly) small details need to be added multiple/calculated price when yearly selected ^^</li>
                     <li>Category (photos)</li>
                     <li>Payment method</li>
                     <li>Status (active, inactive, cancelled)</li>
