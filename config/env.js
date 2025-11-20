@@ -10,7 +10,7 @@ config({ path: join(__dirname, '..', '.env') });
 
 // Optionally load environment-specific overrides
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const envLocalPath = join(__dirname, '..', `.env.${NODE_ENV}.local`);
+const envLocalPath = join(__dirname, '..', `.env.${NODE_ENV}`);
 
 // Try loading .env.<env>.local (ignore if missing)
 config({ path: envLocalPath });
@@ -27,6 +27,7 @@ export const {
 } = process.env;
 
 export const NODE_ENV_VAR = NODE_ENV;
+
 
 export const PORT_NUMBER = PORT ? parseInt(PORT, 10) : 5501;
 
