@@ -67,20 +67,20 @@ const subscriptionSchema = new mongoose.Schema({
 
 // Auto-calculate renewal date if data is missing 
 // how it works:
-// jan 1st
-// monthly
-// jan 31st
+// jan 1st, monthly -> feb 1st (add 1 month)
+// jan 1st, yearly -> jan 1st next year (add 1 year)
 subscriptionSchema.pre('save', function (next) {
     if (!this.renewalDate) {
-        const renewalPeriods = {
-            daily: 1,
-            weekly: 7,
-            monthly: 30,
-            yearly: 365,
-        };
-
         this.renewalDate = new Date(this.startDate);
-        this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriods[this.frequency]);
+        
+        // Calculate renewal date based on frequency
+        if (this.frequency === 'monthly') {
+            // Add 1 month
+            this.renewalDate.setMonth(this.renewalDate.getMonth() + 1);
+        } else if (this.frequency === 'yearly') {
+            // Add 1 year
+            this.renewalDate.setFullYear(this.renewalDate.getFullYear() + 1);
+        }
     }
 
     // auto-update the status if renewal date has passed 
