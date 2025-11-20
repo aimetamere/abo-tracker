@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { existsSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -8,28 +9,60 @@ const __dirname = dirname(__filename);
 // Determine environment
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Load environment file based on NODE_ENV
-// Development → .env.local
-// Production → .env
-const envPath = NODE_ENV === 'production' 
-    ? join(__dirname, '..', '.env')
-    : join(__dirname, '..', '.env.local');
+// Hybrid loading: Try environment-specific file first, fallback to .env
+let envPath;
+let loadedFrom = '';
 
-config({ path: envPath });
+if (NODE_ENV === 'production') {
+    // Production: Try .env first, then fallback to .env.local if .env doesn't exist
+    const prodPath = join(__dirname, '..', '.env');
+    const fallbackPath = join(__dirname, '..', '.env.local');
+    
+    if (existsSync(prodPath)) {
+        envPath = prodPath;
+        loadedFrom = '.env';
+    } else if (existsSync(fallbackPath)) {
+        envPath = fallbackPath;
+        loadedFrom = '.env.local (fallback)';
+    } else {
+        // Last resort: load .env directly (default dotenv behavior)
+        config();
+        loadedFrom = '.env (default)';
+    }
+} else {
+    // Development: Try .env.local first, then fallback to .env
+    const devPath = join(__dirname, '..', '.env.local');
+    const fallbackPath = join(__dirname, '..', '.env');
+    
+    if (existsSync(devPath)) {
+        envPath = devPath;
+        loadedFrom = '.env.local';
+    } else if (existsSync(fallbackPath)) {
+        envPath = fallbackPath;
+        loadedFrom = '.env (fallback)';
+    } else {
+        // Last resort: load .env directly (default dotenv behavior)
+        config();
+        loadedFrom = '.env (default)';
+    }
+}
 
-// Export all environment variables
-export const {
-  PORT,
-  SERVER_URL,
-  DB_URI,
-  JWT_SECRET,
-  ARCJET_ENV,
-  ARCJET_KEY,
-  QSTASH_TOKEN,
-  QSTASH_URL,
-  EMAIL_USER,
-  EMAIL_PASSWORD,
-} = process.env;
+// Load the environment file if we found a specific path
+if (envPath) {
+    config({ path: envPath });
+}
+
+// Export all environment variables directly (like the simple solution)
+export const PORT = process.env.PORT;
+export const SERVER_URL = process.env.SERVER_URL;
+export const DB_URI = process.env.DB_URI;
+export const JWT_SECRET = process.env.JWT_SECRET;
+export const ARCJET_ENV = process.env.ARCJET_ENV;
+export const ARCJET_KEY = process.env.ARCJET_KEY;
+export const QSTASH_TOKEN = process.env.QSTASH_TOKEN;
+export const QSTASH_URL = process.env.QSTASH_URL;
+export const EMAIL_USER = process.env.EMAIL_USER;
+export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
 // Export NODE_ENV
 export { NODE_ENV };
@@ -43,7 +76,7 @@ export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 // Simple debug logs (SET or MISSING)
 console.log('\n=== Environment Variables ===');
 console.log(`NODE_ENV: ${NODE_ENV}`);
-console.log(`Loaded from: ${envPath}`);
+console.log(`Loaded from: ${loadedFrom}`);
 console.log(`PORT: ${PORT ? 'SET' : 'MISSING'}`);
 console.log(`SERVER_URL: ${SERVER_URL ? 'SET' : 'MISSING'}`);
 console.log(`DB_URI: ${DB_URI ? 'SET' : 'MISSING'}`);
