@@ -83,6 +83,9 @@ console.log(`DB_URI: ${DB_URI ? 'SET' : 'MISSING'}`);
 console.log(`JWT_SECRET: ${JWT_SECRET ? 'SET' : 'MISSING'}`);
 console.log(`ARCJET_KEY: ${ARCJET_KEY ? 'SET' : 'MISSING'}`);
 console.log(`QSTASH_TOKEN: ${QSTASH_TOKEN ? 'SET' : 'MISSING'}`);
+if (QSTASH_TOKEN) {
+    console.log(`QSTASH_TOKEN preview: ${QSTASH_TOKEN.substring(0, 10)}... (length: ${QSTASH_TOKEN.length})`);
+}
 console.log(`EMAIL_USER: ${EMAIL_USER ? 'SET' : 'MISSING'}`);
 console.log(`EMAIL_PASSWORD: ${EMAIL_PASSWORD ? 'SET' : 'MISSING'}`);
 console.log('============================\n');
