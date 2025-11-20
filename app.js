@@ -1,18 +1,10 @@
-// Load environment variables FIRST - before any other imports
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-// Configure dotenv based on NODE_ENV (development or production)
-// On VPS: NODE_ENV=production, so it loads .env.production.local
-// Locally: NODE_ENV=development (or not set), so it loads .env.development.local
-const nodeEnv = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${nodeEnv}.local` });
+// Import env.js FIRST - it loads environment variables
+import { PORT_NUMBER } from './config/env.js';
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
-
-import { PORT_NUMBER } from './config/env.js';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

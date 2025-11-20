@@ -5,35 +5,51 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Always load the main .env file
-config({ path: join(__dirname, '..', '.env') });
-
-// Optionally load environment-specific overrides
+// Determine environment
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const envLocalPath = join(__dirname, '..', `.env.${NODE_ENV}`);
 
-// Try loading .env.<env>.local (ignore if missing)
-config({ path: envLocalPath });
+// Load environment file based on NODE_ENV
+// Development → .env.local
+// Production → .env
+const envPath = NODE_ENV === 'production' 
+    ? join(__dirname, '..', '.env')
+    : join(__dirname, '..', '.env.local');
 
-// Export variables
+config({ path: envPath });
+
+// Export all environment variables
 export const {
-  PORT, SERVER_URL,
+  PORT,
+  SERVER_URL,
   DB_URI,
   JWT_SECRET,
-  ARCJET_ENV, ARCJET_KEY,
-  QSTASH_TOKEN, QSTASH_URL,
+  ARCJET_ENV,
+  ARCJET_KEY,
+  QSTASH_TOKEN,
+  QSTASH_URL,
   EMAIL_USER,
   EMAIL_PASSWORD,
 } = process.env;
 
-export const NODE_ENV_VAR = NODE_ENV;
+// Export NODE_ENV
+export { NODE_ENV };
 
-
+// Set default PORT if not provided
 export const PORT_NUMBER = PORT ? parseInt(PORT, 10) : 5501;
 
-console.log('\n Environment variables after loading:');
-console.log('   EMAIL_USER:', EMAIL_USER || 'UNDEFINED');
-console.log('   EMAIL_PASSWORD:', EMAIL_PASSWORD ? `SET (${EMAIL_PASSWORD.length} chars)` : 'UNDEFINED');
-console.log('');
-
+// Set default for JWT_EXPIRES_IN if not provided
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+// Simple debug logs (SET or MISSING)
+console.log('\n=== Environment Variables ===');
+console.log(`NODE_ENV: ${NODE_ENV}`);
+console.log(`Loaded from: ${envPath}`);
+console.log(`PORT: ${PORT ? 'SET' : 'MISSING'}`);
+console.log(`SERVER_URL: ${SERVER_URL ? 'SET' : 'MISSING'}`);
+console.log(`DB_URI: ${DB_URI ? 'SET' : 'MISSING'}`);
+console.log(`JWT_SECRET: ${JWT_SECRET ? 'SET' : 'MISSING'}`);
+console.log(`ARCJET_KEY: ${ARCJET_KEY ? 'SET' : 'MISSING'}`);
+console.log(`QSTASH_TOKEN: ${QSTASH_TOKEN ? 'SET' : 'MISSING'}`);
+console.log(`EMAIL_USER: ${EMAIL_USER ? 'SET' : 'MISSING'}`);
+console.log(`EMAIL_PASSWORD: ${EMAIL_PASSWORD ? 'SET' : 'MISSING'}`);
+console.log('============================\n');
