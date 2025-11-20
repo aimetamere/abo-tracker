@@ -73,16 +73,16 @@ nano .env.production.local
 
 **You can copy most values from your `.env.development.local`, but you need to change:**
 
-1. ✅ **MongoDB (DB_URI)** - Copy as-is from development
-2. ✅ **JWT_SECRET** - Copy as-is from development (or generate new one for extra security)
-3. ✅ **JWT_EXPIRES_IN** - Copy as-is from development
-4. ✅ **ARCJET_KEY** - Copy as-is from development
-5. ✅ **QSTASH_TOKEN** - Copy as-is from development
-6. ✅ **EMAIL_USER** - Copy as-is from development
-7. ✅ **EMAIL_PASSWORD** - Copy as-is from development
-8. ❌ **SERVER_URL** - **MUST CHANGE** from ngrok URL to your real domain
-9. ❌ **ARCJET_ENV** - Change from `DEVELOPMENT` to `PRODUCTION`
-10. ❌ **NODE_ENV** - Change from `development` to `production`
+1. **MongoDB (DB_URI)** - Copy as-is from development
+2. **JWT_SECRET** - Copy as-is from development (or generate new one for extra security)
+3. **JWT_EXPIRES_IN** - Copy as-is from development
+4. **ARCJET_KEY** - Copy as-is from development
+5. **QSTASH_TOKEN** - Copy as-is from development
+6. **EMAIL_USER** - Copy as-is from development
+7. **EMAIL_PASSWORD** - Copy as-is from development
+8. **SERVER_URL** - **MUST CHANGE** from ngrok URL to your real domain
+9. **ARCJET_ENV** - Change from `DEVELOPMENT` to `PRODUCTION`
+10. **NODE_ENV** - Change from `development` to `production`
 
 ### Production Environment File Template
 
@@ -149,10 +149,10 @@ EMAIL_PASSWORD=your-password
 ```
 
 **Important Changes:**
-- ❌ Replace `https://sheathier-unconfiscable-laurette.ngrok-free.dev/` with `https://yourdomain.com`
-- ❌ Change `ARCJET_ENV` from `DEVELOPMENT` to `PRODUCTION`
-- ❌ Change `NODE_ENV` from `development` to `production`
-- ✅ Everything else can be copied from development
+- Replace `https://sheathier-unconfiscable-laurette.ngrok-free.dev/` with `https://yourdomain.com`
+- Change `ARCJET_ENV` from `DEVELOPMENT` to `PRODUCTION`
+- Change `NODE_ENV` from `development` to `production`
+- Everything else can be copied from development
 
 **Save the file:** Press `Ctrl+X`, then `Y`, then `Enter`
 

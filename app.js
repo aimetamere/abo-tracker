@@ -42,12 +42,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
 app.use('/api/v1/workflows', workflowRouter);
 
-// Serve static files from public directory (after API routes)
-app.use(express.static(join(__dirname, 'public')));
-
-app.use(errorMiddleware);
-
-// Serve homepage.html for root route and aliases
+// Serve homepage.html for root route and aliases (BEFORE static files)
 app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'public', 'homepage.html'));
 });
@@ -60,6 +55,12 @@ app.get('/homepage', (req, res) => {
 app.get('/index.html', (req, res) => {
     res.sendFile(join(__dirname, 'public', 'homepage.html'));
 });
+
+// Serve static files from public directory (after routes)
+app.use(express.static(join(__dirname, 'public')));
+
+// Error middleware MUST be last
+app.use(errorMiddleware);
 
 // Connect to database first, then start the server
 const startServer = async () => {
