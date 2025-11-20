@@ -21,7 +21,7 @@ export const createSubscription = async (req, res, next) => {
         });
 
         // Schedule QStash workflow for reminders
-        const workflowUrl = `${SERVER_URL}/api/v1/workflow/subscription/reminder`;
+        const workflowUrl = `${SERVER_URL}/api/v1/workflows/subscription/reminder`;
         const workflowRun = await workflowClient.trigger({
             url: workflowUrl,
             body: {

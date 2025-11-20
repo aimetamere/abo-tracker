@@ -345,7 +345,9 @@ async function loadSubscriptions() {
         const data = await response.json();
 
         if (response.ok) {
-            displaySubscriptions(data.data || []);
+            // Backend returns { data: { subscriptions: [...] } }
+            const subscriptions = data.data?.subscriptions || data.data || [];
+            displaySubscriptions(subscriptions);
         } else {
             subscriptionsList.innerHTML = '<p class="error-message">Failed to load subscriptions</p>';
         }

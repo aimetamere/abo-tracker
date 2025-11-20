@@ -13,16 +13,17 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 let envPath;
 let loadedFrom = '';
 
+// Always try to load .env first (most common case)
+const rootEnvPath = join(__dirname, '..', '.env');
+const rootEnvLocalPath = join(__dirname, '..', '.env.local');
+
 if (NODE_ENV === 'production') {
     // Production: Try .env first, then fallback to .env.local if .env doesn't exist
-    const prodPath = join(__dirname, '..', '.env');
-    const fallbackPath = join(__dirname, '..', '.env.local');
-    
-    if (existsSync(prodPath)) {
-        envPath = prodPath;
+    if (existsSync(rootEnvPath)) {
+        envPath = rootEnvPath;
         loadedFrom = '.env';
-    } else if (existsSync(fallbackPath)) {
-        envPath = fallbackPath;
+    } else if (existsSync(rootEnvLocalPath)) {
+        envPath = rootEnvLocalPath;
         loadedFrom = '.env.local (fallback)';
     } else {
         // Last resort: load .env directly (default dotenv behavior)
@@ -31,14 +32,11 @@ if (NODE_ENV === 'production') {
     }
 } else {
     // Development: Try .env.local first, then fallback to .env
-    const devPath = join(__dirname, '..', '.env.local');
-    const fallbackPath = join(__dirname, '..', '.env');
-    
-    if (existsSync(devPath)) {
-        envPath = devPath;
+    if (existsSync(rootEnvLocalPath)) {
+        envPath = rootEnvLocalPath;
         loadedFrom = '.env.local';
-    } else if (existsSync(fallbackPath)) {
-        envPath = fallbackPath;
+    } else if (existsSync(rootEnvPath)) {
+        envPath = rootEnvPath;
         loadedFrom = '.env (fallback)';
     } else {
         // Last resort: load .env directly (default dotenv behavior)
