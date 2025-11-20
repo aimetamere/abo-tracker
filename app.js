@@ -9,10 +9,10 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import authRouter from './routes/auth.routes.js';
-import userRouter from './routes/user.routes.js';
-import subscriptionRouter from './routes/subscription.routes.js';
-import workflowRouter from './routes/workflow.routes.js';
+import authRouter from './src/routes/auth.routes.js';
+import userRouter from './src/routes/user.routes.js';
+import subscriptionRouter from './src/routes/subscription.routes.js';
+import workflowRouter from './src/routes/workflow.routes.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
 import arcjetMiddleware from './src/middlewares/arcjet.middleware.js';
 import connectToDatabase, { mongoose } from './src/database/mongodb.js';

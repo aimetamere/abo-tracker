@@ -78,3 +78,4 @@ const fetchSubscription = async (context, subscriptionId) => {
       }
     })
   }
+

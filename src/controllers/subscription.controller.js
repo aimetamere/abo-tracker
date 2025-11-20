@@ -1,78 +1,91 @@
 import Subscription from '../models/subscription.model.js';
 import { workflowClient } from '../config/upstash.js';
 import { SERVER_URL } from '../config/env.js';
+import ErrorResponse from '../utils/ErrorResponse.js';
 
 export const createSubscription = async (req, res, next) => {
     try {
+        const { name, price, currency, frequency, category, paymentMethod, startDate } = req.body;
+        const userId = req.user._id;
+
+        // Create subscription
         const subscription = await Subscription.create({
-            ...req.body, // passes every request user in the body to the subscription
-            user: req.user._id, // passes the user id to the subscription
+            name,
+            price,
+            currency,
+            frequency,
+            category,
+            paymentMethod,
+            startDate,
+            user: userId,
         });
 
-        // Trigger the reminder workflow for the newly created subscription
-        console.log(`Triggering workflow for subscription ${subscription._id.toString()}`);
-        console.log(`Workflow URL: ${SERVER_URL}/api/v1/workflows/subscription/reminder`);
-        
-        try {
-            const triggerResponse = await workflowClient.trigger({
-                url: `${SERVER_URL}/api/v1/workflows/subscription/reminder`,
-                body: {
-                    subscriptionId: subscription._id.toString(),
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                retries: 0,
-            });
+        // Schedule QStash workflow for reminders
+        const workflowUrl = `${SERVER_URL}/api/v1/workflow/subscription/reminder`;
+        const workflowRun = await workflowClient.trigger({
+            url: workflowUrl,
+            body: {
+                subscriptionId: subscription._id.toString(),
+            },
+        });
 
-            const workflowRunId = triggerResponse?.workflowRunId || triggerResponse?.id;
-            res.status(201).json({ success: true, data: { subscription, workflowRunId } });
-        } catch (workflowError) {
-            console.error('Failed to trigger workflow:', workflowError);
-            res.status(201).json({ success: true, data: { subscription } });
-        }
-    } catch (e) {
-      next(e);
-    }   
-}
+        res.status(201).json({
+            success: true,
+            message: 'Subscription created successfully',
+            data: {
+                subscription,
+                workflowRunId: workflowRun.runId,
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 export const getUserSubscription = async (req, res, next) => {
     try {
-        // will check if user is the same as the one in the token 
-        // Convert both to strings for comparison (req.user._id is ObjectId, req.params.id is string)
-        if (req.user._id.toString() !== req.params.id) {
-            const error = new Error('you are not the owner of this account');
-            error.status = 401;
-            throw error;
-        }
+        const userId = req.user._id;
 
-        const subscription = await Subscription.find({ user: req.params.id });
-        res.status(200).json({ success: true, data: subscription});
+        const subscriptions = await Subscription.find({ user: userId }).sort({ renewalDate: 1 });
+
+        res.status(200).json({
+            success: true,
+            message: 'Subscriptions retrieved successfully',
+            data: {
+                subscriptions,
+            }
+        });
     } catch (error) {
         next(error);
     }
-}
+};
 
 export const deleteSubscription = async (req, res, next) => {
     try {
-        const subscription = await Subscription.findById(req.params.id);
+        const { id } = req.params;
+        const userId = req.user._id;
+
+        const subscription = await Subscription.findById(id);
 
         if (!subscription) {
-            const error = new Error('Subscription not found');
-            error.status = 404;
+            const error = new ErrorResponse('Subscription not found', 404);
             throw error;
         }
 
-        // Check if user owns this subscription
-        if (subscription.user.toString() !== req.user._id.toString()) {
-            const error = new Error('You are not the owner of this subscription');
-            error.status = 401;
+        // Check ownership
+        if (subscription.user.toString() !== userId.toString()) {
+            const error = new ErrorResponse('Unauthorized to delete this subscription', 403);
             throw error;
         }
 
-        await Subscription.findByIdAndDelete(req.params.id);
-        res.status(200).json({ success: true, message: 'Subscription deleted successfully' });
+        await Subscription.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: 'Subscription deleted successfully',
+        });
     } catch (error) {
         next(error);
     }
-}
+};
+
