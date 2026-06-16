@@ -86,6 +86,4 @@ Error handling is implemented throughout the application using custom error midd
 
 This project was built as a learning exercise for backend development concepts including REST APIs, authentication, database operations, and workflow scheduling. Feel free to explore the codebase and use it as a reference for similar projects.
 
-## License
 
-This project is private and intended for educational purposes.
